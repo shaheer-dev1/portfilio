@@ -1,0 +1,20 @@
+.lineGroup,
+.wordGroup {
+  display: inline;
+}
+
+.line {
+  display: inline-block;
+}
+
+.highlight {
+  background: var(--gradient-hero);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.word {
+  display: inline-block;
+  overflow: hidden;
+}

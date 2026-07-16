@@ -1,0 +1,136 @@
+.timeline {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  max-width: 52rem;
+}
+
+.item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-6);
+}
+
+.marker {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 1rem;
+  padding-top: 0.35rem;
+}
+
+.dot {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: var(--radius-full);
+  background: var(--color-accent-blue);
+  box-shadow: 0 0 0 4px rgba(79, 124, 255, 0.15), var(--shadow-glow-blue);
+  flex-shrink: 0;
+  z-index: 1;
+}
+
+.dotCurrent {
+  background: var(--color-accent-cyan);
+  box-shadow:
+    0 0 0 4px rgba(0, 212, 255, 0.22),
+    0 0 18px rgba(0, 212, 255, 0.35);
+}
+
+.line {
+  flex: 1;
+  width: 1px;
+  min-height: 3rem;
+  margin-top: var(--space-2);
+  background: linear-gradient(
+    180deg,
+    rgba(79, 124, 255, 0.45) 0%,
+    rgba(255, 255, 255, 0.06) 100%
+  );
+}
+
+.content {
+  padding-bottom: var(--space-10);
+}
+
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-3) var(--space-6);
+  margin-bottom: var(--space-4);
+}
+
+.role {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-1);
+}
+
+.company {
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+}
+
+.separator {
+  margin-inline: var(--space-2);
+  color: var(--color-text-muted);
+}
+
+.period {
+  font-size: var(--text-sm);
+  color: var(--color-accent-cyan);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--tracking-wide);
+  white-space: nowrap;
+}
+
+.summary {
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+  line-height: var(--leading-relaxed);
+  margin-bottom: var(--space-4);
+  max-width: 48rem;
+}
+
+.highlights {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.highlights li {
+  position: relative;
+  padding-left: var(--space-5);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+}
+
+.highlights li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 5px;
+  height: 5px;
+  border-radius: var(--radius-full);
+  background: var(--color-border-hover);
+}
+
+.item:last-child .content {
+  padding-bottom: 0;
+}
+
+@media (max-width: 640px) {
+  .item {
+    gap: var(--space-4);
+  }
+
+  .period {
+    white-space: normal;
+  }
+}

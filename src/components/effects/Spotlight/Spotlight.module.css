@@ -1,0 +1,29 @@
+.spotlight {
+  position: relative;
+  --spotlight-x: 50%;
+  --spotlight-y: 40%;
+  --spotlight-intensity: 1;
+}
+
+.glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background: radial-gradient(
+    600px circle at var(--spotlight-x) var(--spotlight-y),
+    rgba(79, 124, 255, calc(0.12 * var(--spotlight-intensity))),
+    rgba(124, 77, 255, calc(0.06 * var(--spotlight-intensity))) 35%,
+    transparent 65%
+  );
+  transition: opacity var(--transition-normal);
+}
+
+.disabled .glow {
+  display: none;
+}
+
+.spotlight > :not(.glow) {
+  position: relative;
+  z-index: 1;
+}

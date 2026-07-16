@@ -1,0 +1,157 @@
+@import './tokens.css';
+@import './typography.css';
+@import './animations.css';
+@import './utilities.css';
+
+/* Font imports */
+@import '@fontsource/inter/400.css';
+@import '@fontsource/inter/500.css';
+@import '@fontsource/space-grotesk/500.css';
+@import '@fontsource/space-grotesk/600.css';
+@import '@fontsource/space-grotesk/700.css';
+
+/* ─── Reset ─── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--navbar-height);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--leading-relaxed);
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-primary);
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-display);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--leading-tight);
+  color: var(--color-text-primary);
+}
+
+p {
+  color: var(--color-text-secondary);
+}
+
+/* ─── Selection ─── */
+::selection {
+  background-color: var(--selection-bg);
+  color: var(--selection-color);
+}
+
+::-moz-selection {
+  background-color: var(--selection-bg);
+  color: var(--selection-color);
+}
+
+/* ─── Focus ─── */
+:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar {
+  width: var(--scrollbar-width);
+  height: var(--scrollbar-width);
+}
+
+::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--gradient-scrollbar);
+  border-radius: var(--radius-full);
+  transition: background var(--transition-fast);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(
+    180deg,
+    var(--color-accent-cyan) 0%,
+    var(--color-accent-purple) 100%
+  );
+}
+
+/* Firefox scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-accent-blue) var(--scrollbar-track);
+}
+
+/* ─── App shell ─── */
+.app-shell {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-main {
+  position: relative;
+  z-index: var(--z-content);
+  flex: 1;
+  padding-top: var(--navbar-height);
+}

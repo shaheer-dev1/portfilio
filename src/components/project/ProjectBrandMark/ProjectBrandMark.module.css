@@ -1,0 +1,32 @@
+.mark {
+  display: block;
+  object-fit: contain;
+  object-position: center;
+  background: transparent;
+}
+
+.hero {
+  width: 90% !important;
+  height: 90% !important;
+  max-width: none !important;
+  max-height: none !important;
+}
+
+.card {
+  width: 88%;
+  height: 88%;
+  max-width: none;
+  max-height: none;
+}
+
+.featured {
+  width: auto;
+  height: 3.25rem;
+  max-width: 10rem;
+}
+
+.inline {
+  width: auto;
+  height: 2.5rem;
+  max-width: 8rem;
+}

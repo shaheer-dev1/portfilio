@@ -1,0 +1,32 @@
+.subtitle {
+  font-family: var(--font-sans);
+  font-size: var(--text-lg);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--leading-relaxed);
+  letter-spacing: var(--tracking-normal);
+  color: var(--color-text-secondary);
+  max-width: 56ch;
+}
+
+.centered {
+  text-align: center;
+  margin-inline: auto;
+}
+
+.sm {
+  font-size: var(--text-base);
+}
+
+.lg {
+  font-size: var(--text-xl);
+}
+
+@media (max-width: 768px) {
+  .subtitle {
+    font-size: var(--text-base);
+  }
+
+  .lg {
+    font-size: var(--text-lg);
+  }
+}

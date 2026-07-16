@@ -1,0 +1,42 @@
+.wrapper {
+  position: relative;
+  border-radius: inherit;
+  padding: 1px;
+  background: var(--gradient-border);
+  background-size: 300% 300%;
+}
+
+.animated {
+  animation: gradientRotate var(--duration-gradient) var(--ease-linear) infinite;
+}
+
+.inner {
+  border-radius: inherit;
+  background: var(--color-bg-card);
+  height: 100%;
+}
+
+.subtle {
+  opacity: 0.6;
+}
+
+.subtle:hover,
+.subtle:focus-within {
+  opacity: 1;
+}
+
+.glow {
+  box-shadow: var(--shadow-glow-combined);
+}
+
+.radiusButton {
+  border-radius: var(--radius-button);
+}
+
+.radiusCard {
+  border-radius: var(--radius-card);
+}
+
+.radiusContainer {
+  border-radius: var(--radius-container);
+}

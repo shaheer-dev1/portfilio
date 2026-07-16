@@ -1,0 +1,46 @@
+.canvas {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-background);
+  pointer-events: none;
+  overflow: hidden;
+  background-color: var(--color-bg-primary);
+}
+
+.mesh {
+  position: absolute;
+  inset: 0;
+  background: var(--gradient-radial-mesh);
+}
+
+.grid {
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(
+      rgba(255, 255, 255, 0.02) 1px,
+      transparent 1px
+    ),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse at center, black 20%, transparent 70%);
+  -webkit-mask-image: radial-gradient(
+    ellipse at center,
+    black 20%,
+    transparent 70%
+  );
+}
+
+.vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 40%,
+    var(--color-bg-primary) 100%
+  );
+}
+
+.orbs {
+  position: absolute;
+  inset: 0;
+}

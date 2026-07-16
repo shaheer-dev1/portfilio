@@ -1,0 +1,150 @@
+.button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-6);
+  border-radius: var(--radius-button);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--leading-normal);
+  letter-spacing: var(--tracking-wide);
+  white-space: nowrap;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition:
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast),
+    background var(--transition-fast),
+    border-color var(--transition-fast),
+    color var(--transition-fast);
+  overflow: hidden;
+}
+
+.button:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Ripple layer */
+.ripple {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at var(--ripple-x, 50%) var(--ripple-y, 50%),
+    rgba(255, 255, 255, 0.25) 0%,
+    transparent 60%
+  );
+  opacity: 0;
+  transition: opacity var(--duration-instant);
+  pointer-events: none;
+}
+
+.button:active:not(:disabled) .ripple {
+  opacity: 1;
+}
+
+/* ─── Primary ─── */
+.primary {
+  background: var(--gradient-button);
+  color: var(--color-text-primary);
+  box-shadow: var(--shadow-button);
+}
+
+.primary:hover:not(:disabled) {
+  box-shadow: var(--shadow-button-hover);
+}
+
+/* ─── Secondary ─── */
+.secondary {
+  background: var(--color-bg-card);
+  color: var(--color-text-primary);
+  border-color: var(--color-border);
+  box-shadow: var(--shadow-sm);
+}
+
+.secondary:hover:not(:disabled) {
+  background: var(--color-bg-card-hover);
+  border-color: var(--color-border-hover);
+  box-shadow: var(--shadow-glow-combined);
+}
+
+/* ─── Gradient ─── */
+.gradient {
+  background: var(--gradient-hero);
+  color: var(--color-text-primary);
+  box-shadow: var(--shadow-glow-purple);
+}
+
+.gradient:hover:not(:disabled) {
+  box-shadow: var(--shadow-glow-blue-lg), var(--shadow-glow-purple);
+}
+
+/* ─── Outline ─── */
+.outline {
+  background: transparent;
+  color: var(--color-text-primary);
+  border-color: var(--color-border);
+}
+
+.outline:hover:not(:disabled) {
+  border-color: var(--color-border-active);
+  background: var(--color-accent-blue-muted);
+  box-shadow: var(--shadow-glow-blue);
+}
+
+/* ─── Ghost ─── */
+.ghost {
+  background: transparent;
+  color: var(--color-text-secondary);
+  padding: var(--space-2) var(--space-4);
+}
+
+.ghost:hover:not(:disabled) {
+  color: var(--color-text-primary);
+  background: var(--color-accent-blue-muted);
+}
+
+/* ─── Sizes ─── */
+.sm {
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--text-xs);
+}
+
+.lg {
+  padding: var(--space-4) var(--space-8);
+  font-size: var(--text-base);
+}
+
+.iconOnly {
+  padding: var(--space-3);
+  aspect-ratio: 1;
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.icon svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.lg .icon svg {
+  width: 1.125rem;
+  height: 1.125rem;
+}

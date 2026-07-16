@@ -1,0 +1,78 @@
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(var(--blur-2xl));
+  pointer-events: none;
+  will-change: transform;
+}
+
+.blue {
+  background: var(--gradient-radial-blue);
+}
+
+.purple {
+  background: var(--gradient-radial-purple);
+}
+
+.cyan {
+  background: var(--gradient-radial-cyan);
+}
+
+.topLeft {
+  top: -10%;
+  left: -5%;
+  width: 50vw;
+  height: 50vw;
+  max-width: 600px;
+  max-height: 600px;
+}
+
+.topRight {
+  top: 5%;
+  right: -10%;
+  width: 40vw;
+  height: 40vw;
+  max-width: 500px;
+  max-height: 500px;
+}
+
+.bottomCenter {
+  bottom: -15%;
+  left: 30%;
+  width: 55vw;
+  height: 55vw;
+  max-width: 700px;
+  max-height: 700px;
+}
+
+.center {
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 30vw;
+  height: 30vw;
+  max-width: 400px;
+  max-height: 400px;
+}
+
+.animated {
+  animation: orbFloat 25s var(--ease-in-out) infinite;
+}
+
+.animatedSlow {
+  animation: orbFloat 35s var(--ease-in-out) infinite reverse;
+}
+
+.animatedDelay {
+  animation: orbFloat 30s var(--ease-in-out) infinite;
+  animation-delay: -10s;
+}
+
+@media (max-width: 768px) {
+  .topLeft,
+  .topRight,
+  .bottomCenter {
+    width: 70vw;
+    height: 70vw;
+  }
+}
