@@ -1,4 +1,7 @@
+import resumePdf from '@/assets/Shaheer_Qureshi_Resume.pdf'
+
 export const navigationLinks = [
+  { id: 'home', label: 'Home', href: '/' },
   { id: 'about', label: 'About', href: '/#about' },
   { id: 'projects', label: 'Projects', href: '/projects' },
   { id: 'skills', label: 'Skills', href: '/#skills' },
@@ -8,6 +11,7 @@ export const navigationLinks = [
 
 export const resumeLink = {
   label: 'Resume',
-  href: '/resume.pdf',
-  external: true,
+  href: resumePdf,
+  download: 'Shaheer_Qureshi_Resume.pdf',
+  external: false,
 }

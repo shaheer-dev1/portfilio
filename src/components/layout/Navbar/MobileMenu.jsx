@@ -77,6 +77,7 @@ export default function MobileMenu() {
               <Button
                 variant="primary"
                 href={resumeLink.href}
+                download={resumeLink.download}
                 fullWidth
                 onClick={handleLinkClick}
                 {...(resumeLink.external && {

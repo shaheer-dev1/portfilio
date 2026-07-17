@@ -3,6 +3,7 @@ import voiceXLogo from '@/assets/projects/voicex/logo.png'
 import mediFlowHomeImg from '@/assets/projects/Mediflow/home.png'
 import mediFlowLogo from '@/assets/projects/Mediflow/logo.png'
 import newsSenseHomeImg from '@/assets/projects/NewsSense/home.png'
+import newsSenseLogo from '@/assets/projects/NewsSense/logo.png'
 
 /**
  * Project metadata only.
@@ -38,7 +39,7 @@ export const projects = [
       'NLP',
     ],
     thumbnail: newsSenseHomeImg,
-    logo: null,
+    logo: newsSenseLogo,
     status: 'Completed',
     year: 2026,
     github: null,

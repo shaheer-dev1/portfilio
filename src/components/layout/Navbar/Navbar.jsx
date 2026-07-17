@@ -54,6 +54,7 @@ export default function Navbar() {
                   size="sm"
                   href={resumeLink.href}
                   className={styles.resume}
+                  download={resumeLink.download}
                   {...(resumeLink.external && {
                     target: '_blank',
                     rel: 'noopener noreferrer',

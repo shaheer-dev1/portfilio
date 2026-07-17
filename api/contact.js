@@ -3,8 +3,7 @@ import { Resend } from 'resend'
 const resend = new Resend(process.env.RESEND_API_KEY)
 
 const CONTACT_TO = process.env.CONTACT_TO_EMAIL || 'shaheer.qureshi.dev@gmail.com'
-const FROM_EMAIL =
-  process.env.RESEND_FROM_EMAIL || 'Shaheer Qureshi <onboarding@resend.dev>'
+const FROM_EMAIL = process.env.RESEND_FROM_EMAIL
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000
@@ -67,18 +66,28 @@ function buildInquiryHtml({ name, email, subject, message, submittedAt, ip }) {
 
 function buildAutoReplyHtml(name) {
   return `
-    <div style="font-family: Inter, Arial, sans-serif; color: #111; line-height: 1.7;">
-      <p>Hi ${escapeHtml(name)},</p>
-      <p>Thank you for contacting me through my portfolio.</p>
-      <p>I've successfully received your message.</p>
-      <p>I'll review your inquiry and respond as soon as possible, usually within 24 hours.</p>
-      <p>Meanwhile, feel free to explore my projects and portfolio.</p>
-      <p style="margin-top: 24px;">
-        Best regards,<br />
-        <strong>Shaheer Qureshi</strong><br />
-        Full Stack Developer<br />
-        Islamabad, Pakistan
-      </p>
+    <div style="margin: 0; padding: 32px 16px; background: #f4f7fb;">
+      <div style="max-width: 600px; margin: 0 auto; overflow: hidden; border: 1px solid #e2e8f0; border-radius: 16px; background: #ffffff; font-family: Inter, Arial, sans-serif; color: #172033;">
+        <div style="padding: 28px 32px; background: linear-gradient(135deg, #315efb, #6d4aff); color: #ffffff;">
+          <p style="margin: 0 0 6px; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.82;">Portfolio inquiry</p>
+          <h1 style="margin: 0; font-size: 26px; line-height: 1.3;">Message received</h1>
+        </div>
+        <div style="padding: 32px;">
+          <p style="margin: 0 0 18px; font-size: 16px;">Hi ${escapeHtml(name)},</p>
+          <p style="margin: 0 0 18px; line-height: 1.7;">Thank you for contacting me through my portfolio. I've successfully received your message.</p>
+          <p style="margin: 0 0 18px; line-height: 1.7;">I'll review your inquiry and respond as soon as possible, usually within 24 hours.</p>
+          <p style="margin: 0; line-height: 1.7;">Meanwhile, feel free to explore my projects and portfolio.</p>
+          <div style="margin-top: 28px; padding-top: 22px; border-top: 1px solid #e2e8f0; line-height: 1.7;">
+            Best regards,<br />
+            <strong>Shaheer Qureshi</strong><br />
+            Full Stack Developer<br />
+            Islamabad, Pakistan
+          </div>
+        </div>
+        <div style="padding: 16px 32px; background: #f8fafc; color: #64748b; font-size: 12px; text-align: center;">
+          Shaheer Qureshi · Full-Stack Developer Portfolio
+        </div>
+      </div>
     </div>
   `
 }
@@ -108,8 +117,11 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed.' })
   }
 
-  if (!process.env.RESEND_API_KEY) {
-    console.error('RESEND_API_KEY is not configured.')
+  if (!process.env.RESEND_API_KEY || !FROM_EMAIL) {
+    console.error('Contact email environment is incomplete.', {
+      hasApiKey: Boolean(process.env.RESEND_API_KEY),
+      hasFromEmail: Boolean(FROM_EMAIL),
+    })
     return res.status(500).json({
       error: 'Email service is not configured. Please try again later.',
     })
@@ -160,8 +172,10 @@ export default async function handler(req, res) {
 
   const submittedAt = new Date().toISOString()
 
+  let inquiry
+
   try {
-    const inquiry = await resend.emails.send({
+    inquiry = await resend.emails.send({
       from: FROM_EMAIL,
       to: [CONTACT_TO],
       replyTo: email,
@@ -188,14 +202,30 @@ export default async function handler(req, res) {
       ].join('\n'),
     })
 
-    if (inquiry.error) {
-      console.error('Resend inquiry error:', inquiry.error)
-      return res.status(502).json({
-        error: 'Unable to send your message right now. Please try again shortly.',
-      })
-    }
+  } catch (error) {
+    console.error('Resend inquiry request failed.', {
+      error,
+      recipient: CONTACT_TO,
+    })
+    return res.status(502).json({
+      error: 'Unable to send your message right now. Please try again shortly.',
+    })
+  }
 
-    const autoReply = await resend.emails.send({
+  if (inquiry.error) {
+    console.error('Resend rejected the inquiry email.', {
+      error: inquiry.error,
+      recipient: CONTACT_TO,
+    })
+    return res.status(502).json({
+      error: 'Unable to send your message right now. Please try again shortly.',
+    })
+  }
+
+  let autoReply
+
+  try {
+    autoReply = await resend.emails.send({
       from: FROM_EMAIL,
       to: [email],
       replyTo: CONTACT_TO,
@@ -203,17 +233,34 @@ export default async function handler(req, res) {
       html: buildAutoReplyHtml(name),
       text: buildAutoReplyText(name),
     })
-
-    if (autoReply.error) {
-      // Inquiry already delivered — treat as success with a soft note.
-      console.error('Resend auto-reply error:', autoReply.error)
-    }
-
-    return res.status(200).json({ ok: true })
   } catch (error) {
-    console.error('Contact API failure:', error)
-    return res.status(500).json({
-      error: 'Unexpected server error. Please try again or email me directly.',
+    console.error('Resend confirmation request failed.', {
+      error,
+      recipient: email,
+      inquiryId: inquiry.data?.id,
+    })
+    return res.status(502).json({
+      error:
+        'Your inquiry was received, but the confirmation email could not be sent. Please contact me directly if needed.',
     })
   }
+
+  if (autoReply.error) {
+    console.error('Resend rejected the confirmation email.', {
+      error: autoReply.error,
+      recipient: email,
+      inquiryId: inquiry.data?.id,
+    })
+    return res.status(502).json({
+      error:
+        'Your inquiry was received, but the confirmation email could not be sent. Please contact me directly if needed.',
+    })
+  }
+
+  console.info('Portfolio inquiry and confirmation sent.', {
+    inquiryId: inquiry.data?.id,
+    confirmationId: autoReply.data?.id,
+  })
+
+  return res.status(200).json({ ok: true })
 }
