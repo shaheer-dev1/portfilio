@@ -48,6 +48,36 @@ function escapeHtml(value) {
     .replaceAll("'", '&#39;')
 }
 
+function getErrorMessage(error, fallback) {
+  if (typeof error?.message === 'string' && error.message.trim()) {
+    return error.message.trim()
+  }
+
+  return fallback
+}
+
+function logEmailFailure(operation, { error, response, recipient, inquiryId }) {
+  const details = {
+    operation,
+    recipient,
+    httpStatus:
+      error?.statusCode ??
+      error?.status ??
+      response?.error?.statusCode ??
+      response?.error?.status ??
+      null,
+    errorMessage: getErrorMessage(error, 'Unknown Resend error'),
+    errorName: error?.name ?? null,
+    errorCode: error?.code ?? error?.type ?? null,
+    resendResponse: response ?? null,
+    stackTrace: error?.stack ?? null,
+    inquiryId: inquiryId ?? null,
+  }
+
+  console.error(`${operation} email failed`, details)
+  return details
+}
+
 function buildInquiryHtml({ name, email, subject, message, submittedAt, ip }) {
   return `
     <div style="font-family: Inter, Arial, sans-serif; color: #111; line-height: 1.6;">
@@ -62,53 +92,6 @@ function buildInquiryHtml({ name, email, subject, message, submittedAt, ip }) {
       <p style="white-space: pre-wrap;">${escapeHtml(message)}</p>
     </div>
   `
-}
-
-function buildAutoReplyHtml(name) {
-  return `
-    <div style="margin: 0; padding: 32px 16px; background: #f4f7fb;">
-      <div style="max-width: 600px; margin: 0 auto; overflow: hidden; border: 1px solid #e2e8f0; border-radius: 16px; background: #ffffff; font-family: Inter, Arial, sans-serif; color: #172033;">
-        <div style="padding: 28px 32px; background: linear-gradient(135deg, #315efb, #6d4aff); color: #ffffff;">
-          <p style="margin: 0 0 6px; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.82;">Portfolio inquiry</p>
-          <h1 style="margin: 0; font-size: 26px; line-height: 1.3;">Message received</h1>
-        </div>
-        <div style="padding: 32px;">
-          <p style="margin: 0 0 18px; font-size: 16px;">Hi ${escapeHtml(name)},</p>
-          <p style="margin: 0 0 18px; line-height: 1.7;">Thank you for contacting me through my portfolio. I've successfully received your message.</p>
-          <p style="margin: 0 0 18px; line-height: 1.7;">I'll review your inquiry and respond as soon as possible, usually within 24 hours.</p>
-          <p style="margin: 0; line-height: 1.7;">Meanwhile, feel free to explore my projects and portfolio.</p>
-          <div style="margin-top: 28px; padding-top: 22px; border-top: 1px solid #e2e8f0; line-height: 1.7;">
-            Best regards,<br />
-            <strong>Shaheer Qureshi</strong><br />
-            Full Stack Developer<br />
-            Islamabad, Pakistan
-          </div>
-        </div>
-        <div style="padding: 16px 32px; background: #f8fafc; color: #64748b; font-size: 12px; text-align: center;">
-          Shaheer Qureshi · Full-Stack Developer Portfolio
-        </div>
-      </div>
-    </div>
-  `
-}
-
-function buildAutoReplyText(name) {
-  return [
-    `Hi ${name},`,
-    '',
-    'Thank you for contacting me through my portfolio.',
-    '',
-    "I've successfully received your message.",
-    '',
-    "I'll review your inquiry and respond as soon as possible, usually within 24 hours.",
-    '',
-    'Meanwhile, feel free to explore my projects and portfolio.',
-    '',
-    'Best regards,',
-    'Shaheer Qureshi',
-    'Full Stack Developer',
-    'Islamabad, Pakistan',
-  ].join('\n')
 }
 
 export default async function handler(req, res) {
@@ -203,63 +186,30 @@ export default async function handler(req, res) {
     })
 
   } catch (error) {
-    console.error('Resend inquiry request failed.', {
+    const failure = logEmailFailure('Notification', {
       error,
       recipient: CONTACT_TO,
     })
+
     return res.status(502).json({
-      error: 'Unable to send your message right now. Please try again shortly.',
+      error: failure.errorMessage,
     })
   }
 
   if (inquiry.error) {
-    console.error('Resend rejected the inquiry email.', {
+    const failure = logEmailFailure('Notification', {
       error: inquiry.error,
+      response: inquiry,
       recipient: CONTACT_TO,
     })
+
     return res.status(502).json({
-      error: 'Unable to send your message right now. Please try again shortly.',
+      error: failure.errorMessage,
     })
   }
 
-  let autoReply
-
-  try {
-    autoReply = await resend.emails.send({
-      from: FROM_EMAIL,
-      to: [email],
-      replyTo: CONTACT_TO,
-      subject: "Thanks for reaching out! I've received your message.",
-      html: buildAutoReplyHtml(name),
-      text: buildAutoReplyText(name),
-    })
-  } catch (error) {
-    console.error('Resend confirmation request failed.', {
-      error,
-      recipient: email,
-      inquiryId: inquiry.data?.id,
-    })
-    return res.status(502).json({
-      error:
-        'Your inquiry was received, but the confirmation email could not be sent. Please contact me directly if needed.',
-    })
-  }
-
-  if (autoReply.error) {
-    console.error('Resend rejected the confirmation email.', {
-      error: autoReply.error,
-      recipient: email,
-      inquiryId: inquiry.data?.id,
-    })
-    return res.status(502).json({
-      error:
-        'Your inquiry was received, but the confirmation email could not be sent. Please contact me directly if needed.',
-    })
-  }
-
-  console.info('Portfolio inquiry and confirmation sent.', {
+  console.info('Portfolio inquiry notification sent.', {
     inquiryId: inquiry.data?.id,
-    confirmationId: autoReply.data?.id,
   })
 
   return res.status(200).json({ ok: true })

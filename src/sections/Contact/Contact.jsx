@@ -260,10 +260,10 @@ export default function Contact() {
 
               {status === 'success' && (
                 <div className={styles.feedbackSuccess} role="status">
-                  <p className={styles.successTitle}>✅ Thank you!</p>
-                  <p>Your message has been sent successfully.</p>
-                  <p>A confirmation email has also been sent to your inbox.</p>
-                  <p>I&apos;ll get back to you within 24 hours.</p>
+                  <p className={styles.successTitle}>
+                    Thank you! Your message has been received successfully.
+                  </p>
+                  <p>I&apos;ll get back to you as soon as possible.</p>
                 </div>
               )}
 
