@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:full": "vercel dev --local --local-config vercel.dev.json",
     "build": "vite build",
     "lint": "oxlint",
     "preview": "vite preview"
@@ -24,6 +25,7 @@
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.3",
     "oxlint": "^1.71.0",
+    "vercel": "^56.3.1",
     "vite": "^8.1.1"
   }
 }
